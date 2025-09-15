@@ -73,6 +73,7 @@ func (s *ipamServer) doReconcile() {
 		ulog.Errorf("Get local pods list error: %v", err)
 		return
 	}
+	ulog.Infof("GC Pod List: %+v", folks.Items)
 
 	kvs, err := s.networkDB.List()
 	if err != nil {

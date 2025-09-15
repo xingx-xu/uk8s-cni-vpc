@@ -51,9 +51,9 @@ const (
 	AnnotationSecurityGroupId  = "network.kubernetes.io/security-group-id"
 	AnnotationShareBandwidthId = "network.kubernetes.io/sharebandwidth-id"
 
-	//解决calico policy 在使用了postStart情况下规则无法及时下发的问题 https://github.com/projectcalico/calico/issues/3499
-	//annotaion 见calico项目 https://github.com/projectcalico/calico/blob/79b442a53adb7d7f1fd62927d9322daf87dce9de/libcalico-go/lib/backend/k8s/conversion/constants.go
-	//用户想使用该特性，必须要在启动参数设置calicoPolicyFlag=true
+	// 解决calico policy 在使用了postStart情况下规则无法及时下发的问题 https://github.com/projectcalico/calico/issues/3499
+	// annotaion 见calico项目 https://github.com/projectcalico/calico/blob/79b442a53adb7d7f1fd62927d9322daf87dce9de/libcalico-go/lib/backend/k8s/conversion/constants.go
+	// 用户想使用该特性，必须要在启动参数设置calicoPolicyFlag=true
 	AnnotationCalicoPolicyPodIP = "cni.projectcalico.org/podIP"
 )
 
