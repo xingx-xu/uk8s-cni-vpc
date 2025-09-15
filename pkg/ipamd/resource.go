@@ -102,7 +102,9 @@ func (s *ipamServer) doReconcile() {
 					s.networkDB.Put(kv.Key, pNet)
 					break
 				}
+				ulog.Infof("Pod uid mismatched: %+v, %s", pNet, p.UID)
 			}
+
 			if idx == len(folks.Items)-1 {
 				ulog.Infof("Pod is orphan: %+v", pNet)
 				orphans = append(orphans, kv)
