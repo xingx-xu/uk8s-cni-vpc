@@ -89,9 +89,11 @@ func (s *ipamServer) doReconcile() {
 	orphans := make([]*database.KeyValue[rpc.PodNetwork], 0)
 	for _, kv := range kvs {
 		pNet := kv.Value
+		ulog.Infof("Begin to check local network record for pod: %+v", pNet)
 		for idx, p := range folks.Items {
 			if p.Name == pNet.PodName && p.Namespace == pNet.PodNS {
 				if string(p.UID) == pNet.PodUID {
+					ulog.Infof("Pod is not orphan, uid matched: %+v", pNet)
 					break
 				}
 				if len(pNet.PodUID) == 0 {
@@ -102,6 +104,7 @@ func (s *ipamServer) doReconcile() {
 				}
 			}
 			if idx == len(folks.Items)-1 {
+				ulog.Infof("Pod is orphan: %+v", pNet)
 				orphans = append(orphans, kv)
 			}
 		}
