@@ -118,7 +118,6 @@ func Start() error {
 	}
 
 	go ipd.ipPoolWatermarkManager()
-	go ipd.reconcile()
 
 	// UPHost doesn't support uni, no need to run device plugin.
 	// Type O/OS doesn't support uni, no need to run device plugin.

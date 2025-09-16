@@ -17,7 +17,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 
@@ -28,7 +27,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/ucloud/uk8s-cni-vpc/pkg/ulog"
-	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/util/retry"
 )
@@ -51,9 +49,9 @@ const (
 	AnnotationSecurityGroupId  = "network.kubernetes.io/security-group-id"
 	AnnotationShareBandwidthId = "network.kubernetes.io/sharebandwidth-id"
 
-	//解决calico policy 在使用了postStart情况下规则无法及时下发的问题 https://github.com/projectcalico/calico/issues/3499
-	//annotaion 见calico项目 https://github.com/projectcalico/calico/blob/79b442a53adb7d7f1fd62927d9322daf87dce9de/libcalico-go/lib/backend/k8s/conversion/constants.go
-	//用户想使用该特性，必须要在启动参数设置calicoPolicyFlag=true
+	// 解决calico policy 在使用了postStart情况下规则无法及时下发的问题 https://github.com/projectcalico/calico/issues/3499
+	// annotaion 见calico项目 https://github.com/projectcalico/calico/blob/79b442a53adb7d7f1fd62927d9322daf87dce9de/libcalico-go/lib/backend/k8s/conversion/constants.go
+	// 用户想使用该特性，必须要在启动参数设置calicoPolicyFlag=true
 	AnnotationCalicoPolicyPodIP = "cni.projectcalico.org/podIP"
 )
 
@@ -93,18 +91,6 @@ func (s *ipamServer) setPodAnnotation(pod *v1.Pod, pairs map[string]string) erro
 	}
 
 	return err
-}
-
-func (s *ipamServer) getLocalPods() (*v1.PodList, error) {
-	options := metav1.ListOptions{
-		FieldSelector:   fields.OneTermEqualSelector("spec.nodeName", os.Getenv("KUBE_NODE_NAME")).String(),
-		ResourceVersion: "0",
-	}
-	list, err := s.kubeClient.CoreV1().Pods(v1.NamespaceAll).List(context.TODO(), options)
-	if err != nil {
-		return nil, fmt.Errorf("failed to list pods on %s from apiserver", s.nodeName)
-	}
-	return list, nil
 }
 
 func (s *ipamServer) getKubeNodeLabel(nodeName, key string) (string, error) {
