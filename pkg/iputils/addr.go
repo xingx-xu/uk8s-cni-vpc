@@ -87,18 +87,13 @@ func GetNodeAddress(dev string) (string, string, error) {
 		return "", "", err
 	}
 	mac := strings.ToUpper(iface.HardwareAddr.String())
-	addrs, err := iface.Addrs()
+
+	ipaddr, err := GetNodeIPAddress(dev)
 	if err != nil {
-		return "", "", fmt.Errorf("failed to get addrs for iface: %v", err)
+		return "", "", err
 	}
-	if len(addrs) != 1 {
-		return "", "", fmt.Errorf("invalid iface addr count, expect 1, found %d", len(addrs))
-	}
-	ip, _, err := net.ParseCIDR(addrs[0].String())
-	if err != nil {
-		return "", "", fmt.Errorf("failed to parse CIDR: %v", err)
-	}
-	return ip.String(), mac, nil
+
+	return ipaddr.IP.String(), mac, nil
 }
 
 func GetNodeIPAddress(dev string) (*netlink.Addr, error) {
