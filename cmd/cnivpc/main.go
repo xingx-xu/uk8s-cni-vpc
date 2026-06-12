@@ -93,7 +93,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 	netNS := os.Getenv("CNI_NETNS")
 
 	// To assign a VPC IP for pod
-	pn, fromIpam, err := assignPodIp(podName, podNS, netNS, sandBoxId)
+	pn, fromIpam, err := assignPodIp(podName, podNS, netNS, sandBoxId, conf.MTU)
 	if err != nil {
 		ulog.Errorf("Assign a vpc ip for pod %s/%s error: %v", podName, podNS, err)
 		return fmt.Errorf("failed to assign ip: %v", err)
@@ -138,7 +138,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 	}
 
 	// We need to setup vethpair to pod's network namespace
-	err = setupPodVethNetwork(podName, podNS, netNS, sandBoxId, masterInterface, pn)
+	err = setupPodVethNetwork(podName, podNS, netNS, sandBoxId, masterInterface, pn, conf.MTU)
 	if err != nil {
 		ulog.Errorf("Setup pod veth network error: %v", err)
 		rollbackReleaseIP()

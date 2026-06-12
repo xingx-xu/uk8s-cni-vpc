@@ -128,7 +128,7 @@ func cleanUpIPRoutePolicy(ip string) error {
 	return nil
 }
 
-func ensureUNIPrimaryIPRoute(primaryIP, mac, gateway, netmask string) error {
+func ensureUNIPrimaryIPRoute(primaryIP, mac, gateway, netmask string, mtu int) error {
 	link, err := iputils.GetLinkByMac(mac)
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func ensureUNIPrimaryIPRoute(primaryIP, mac, gateway, netmask string) error {
 
 	// Modify MTU:
 	// ip link set dev eth1 mtu 1452
-	err = netlink.LinkSetMTU(link, defaultMtu)
+	err = netlink.LinkSetMTU(link, mtu)
 	if err != nil {
 		ulog.Errorf("Modify mtu for link %v error: %v", linkName, err)
 		return err
